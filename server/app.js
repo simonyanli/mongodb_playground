@@ -3,8 +3,12 @@ const Express = require('express');
 const bodyParse = require('body-parser');
 
 const {mongoose} = require('./db/mongoose');
+const {ObjectID} = require('mongodb');
 const {Todo} = require('./models/todo');
 const {User} = require('./models/user');
+
+
+
 
 const app =new Express();
 
@@ -38,6 +42,29 @@ app.get('/todos',async(req,res) =>{
         res.status(400).send(e);
     }
     
+});
+
+
+app.get('/todos/:id',async (req,res,next)=>{
+    const id = req.params.id;
+
+
+    try {
+        const result = await Todo.findById(id);
+
+        if(!result)
+        {
+            return res.status(400).send();
+    
+        }
+    
+        return res.send({result});
+    
+    }
+    catch (e){
+        res.status(400).send();
+    }    
+  
 })
 
 module.exports = {app}
